@@ -1,45 +1,54 @@
 import os
 import datetime
 import time
-import sys
 
+def center_output(text: str) -> str:
+    text_lines = text.split('\n')
+    output_lines = []
 
-#hours_passed = time_passed.hours
-#minutes_passed = time_passed.minutes
-#seconds_passed = time_passed.seconds
+    terminal_width  = os.get_terminal_size().columns
+    terminal_height = os.get_terminal_size().lines
+    lines_printed = len(text_lines)
+    vertical_centering = (terminal_height - lines_printed) // 2 - 1
 
+    output_lines.append("\n"*vertical_centering)
+
+    for line in text_lines:
+        output_lines.append(line.center(terminal_width))
+
+    output = "\n".join(output_lines)
+
+    return output
 
 
 
 def update_years():
-    birth_date = datetime.datetime(2005, 12, 15)#, 12, 15)
+    birth_date = datetime.datetime(2005, 12, 15, 15, 15)
     date_now = datetime.datetime.now()
 
     time_passed = date_now - birth_date
-
-
     seconds_passed = time_passed.total_seconds()
-    years_passed = int(seconds_passed/60/60/24/365)
-    days_passed = int((seconds_passed/60/60/24)%365)
-    hours_passed = int(days_passed%24)
-    minutes_passed = int(seconds_passed/60%60)
-    milliseconds_passed = str(int(seconds_passed%60*1000%1000)).zfill(3)
-    seconds_passed = int(seconds_passed%60)
-    
-    terminal_width  = os.get_terminal_size().columns
-    terminal_height = os.get_terminal_size().lines
-    lines_printed = 7
-    vertical_centering = (terminal_height - lines_printed) // 2
+
+    years_passed        = str(int( seconds_passed / 60 / 60 / 24 / 365 )).rjust(2)
+    days_passed         = str(int( seconds_passed / 60 / 60 / 24 % 365 )).rjust(3)
+    hours_passed        = str(int( seconds_passed / 60 / 60      % 24  )).rjust(2)
+    minutes_passed      = str(int( seconds_passed / 60           % 60  )).rjust(2)
+    milliseconds_passed = str(int( seconds_passed % 60 * 1000    % 1000)).rjust(3)
+    seconds_passed      = str(int( seconds_passed % 60                 )).rjust(2)
+
 
     os.system("clear")
-    print("\n"*vertical_centering)
-    print(f"{years_passed} years".center(terminal_width))
-    print(f"{days_passed} days".center(terminal_width))
-    print(f"{hours_passed} hours".center(terminal_width))
-    print(f"{minutes_passed} minutes".center(terminal_width))
-    print(f"{seconds_passed} seconds".center(terminal_width))
-    print(f"{milliseconds_passed} milliseconds".center(terminal_width))
-    print("...have passed in your life.".center(terminal_width))
+
+    text = f"""{years_passed} years
+{days_passed} days
+{hours_passed} hours
+{minutes_passed} minutes
+{seconds_passed} seconds
+{milliseconds_passed} milliseconds
+have passed in your life."""
+
+    output_text = center_output(text)
+    print(output_text)
 
 if __name__ == "__main__":
     while True:
